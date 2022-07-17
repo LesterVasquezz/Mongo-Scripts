@@ -1,0 +1,78 @@
+//Expresiones regulares 
+//sin comillas, es sensible a mayusculas . Para que no sea sensible se pone una i al final 
+
+//sensible
+db.alumnos.find
+(
+{nombre:/.*ALE.*/},
+{nombre:1, curp:1, email:1, _id:0}
+)
+
+	//o 
+
+db.alumnos.find
+(
+{nombre:{$regex: ".*ALE.*"}},
+{nombre:1, curp:1, email:1, _id:0}
+)
+
+
+
+
+
+//no sensible 
+
+db.alumnos.find
+(
+{nombre:/.*ale.*/i},
+{nombre:1, curp:1, email:1, _id:0}
+)
+
+	//o
+
+db.alumnos.find
+(
+{nombre:{$regex: ".*ale.*",$options:"i"}},
+{nombre:1, curp:1, email:1, _id:0}
+)
+
+
+//inicia ^
+db.alumnos.distinct("nombre",{nombre:/^ale.*/i}).sort()
+
+//termina $
+db.alumnos.distinct("nombre",{nombre:/.*nia$/i}).sort()
+
+//not  $not
+db.alumnos.distinct("nombre",{nombre:{$not:/.*ale.*/i}}).sort()
+
+//or para expresiones (|)
+
+nombre:/(juan|maria)/i}
+
+//empieza con juan y termina con maria 
+
+nombre:/(^juan|maria$)/i
+
+//rangos 
+{email:/[0-9]/}
+
+//inicia con alguno  
+{email:/^[0-9]/}
+
+
+// {2,} por lo menos dos caracteres ,{2} que sean dos caracteres . \. que contenga un punto
+db.alumnos.find({email:/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/} ,
+
+{nombre:1, email:1, _id:0});
+
+//correos que no sean gmail y hotmail 
+db.alumnos.find(
+{$and:[
+    {email:/^[^@]+@[^@]+\.[a-zA-Z]{2,}$/},
+    {email:{$exists:1}},
+    {email:{$not:/(gmail|hotmail|hotmai\homail)/}}
+    ]
+    } ,
+
+{nombre:1, email:1, _id:0}).count()

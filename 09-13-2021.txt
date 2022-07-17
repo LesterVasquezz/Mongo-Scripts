@@ -1,0 +1,54 @@
+//el import se ejecuta fuera del server de mongo
+
+mongoimport --db test --collection inscritos --file C:\Users\PC\Documents\TEBD20221\desc\alumnos_jsonArray.json --jsonArray
+
+//Update one actualiza algo que ya existe, lo podemos usar como delete. operadores empiezan con signo de peso $set
+
+db.inscritos.updateOne({"clave_alu":11030180},{ $set: { "edad":{"anios":30,"meses":7,"dias":30} } });
+
+db.inscritos.updateOne({"clave_alu":11030180},{ $set: { "evaluaciones":[
+  { "materia": "OPT", "calificacion": 8, "fecha": ISODate("2021-01-03") },
+  { "materia": "ESP", "calificacion": 8, "fecha": ISODate("2021-01-03") },
+  { "materia": "FIS", "calificacion": 7, "fecha": ISODate("2021-02-02") },
+  { "materia": "HM", "calificacion": 10, "fecha": ISODate("2020-11-05") },
+  { "materia": "ING", "calificacion": 9, "fecha": ISODate("2020-12-05") },
+  { "materia": "MAT", "calificacion": 6, "fecha": ISODate("2021-03-04") },
+  { "materia": "QUI", "calificacion": 8, "fecha": ISODate("2021-01-03") }
+   ] } })
+
+//agregamos campo carrera
+db.inscritos.updateOne({"clave_alu":11030180},{ $set:{CARRERA:"ICO"}});
+
+quitar campo carrera usamos $unset
+db.inscritos.updateOne({"clave_alu":11030180},{ $unset:{CARRERA:true}});
+db.inscritos.updateOne({"clave_alu":11030180},{ $unset:{evaluaciones:true}});
+
+
+db.inscritos.updateOne({"clave_alu":11030180},{ $unset:{"edad.meses":true }});
+11030218
+
+db.inscritos.updateOne({"clave_alu":11030180},{ $unset:{"edad.meses":true, email:true,ciudad:true}});
+
+
+
+//actualizar varios 
+
+db.inscritos.updateMany({},{ $unset:{"edad.meses":true, email:true,ciudad:true}});
+
+//con many podemos hacer un arreglo de instrucciones, como set y unset 
+db.inscritos.updateMany({},
+[
+{$set:{status_alu:"AC", niveles:["secundaria","primaria"],actualizado:"$$NOW"}},
+{$unset:["sexo","curp"]}
+]);
+
+db.inscritos.updateMany({},
+{$set:{"domicilio.cd":"CDMX","domicilio.cp":["50500","50600"],actualizado:"$$NOW"}}
+);
+//podemos crear nuevos campos con jerarquia
+db.inscritos.updateMany({},
+{$set:{"domicilio.indicaciones":{calle1:"UNO",calle2:"DOS",calle3:"TRES"},actualizado:"$$NOW"}}
+);
+db.inscritos.updateMany({},
+{$rename:{"domicilio":"direccion"}}
+);

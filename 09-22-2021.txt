@@ -1,0 +1,67 @@
+db.alumnos.find(
+{sexo:"F",ciudad:"QUERETARO"}, // lo toma como un and al separar por coma 
+{_id:0, nombre:1, curp:1, email:1, sexo:1, ciudad:1}
+).count()
+
+*********OPERADORES********
+
+lOS OPERADORES EMPIEZAN CON SIGNO DE PESO Y TIENEN LLAVES 
+
+{sexo:{$eq:"F"}} //operador igual 
+
+{"edad.anios":{$gt:30}}, //mayor que 
+
+{"edad.anios":{$gte:30}}, //mayor o igual 
+
+{"edad.anios":{$lt:30},"edad.meses":{$lt:10}}, //menor que 
+
+{"edad.anios":{$lte:30},"edad.meses":{$lte:10}}, //menor igual que 
+
+{"edad.anios":{$in:[36,26,16,46]}}, //los valores que cumplen con algun valor del arreglo 
+
+{"edad.anios":{$nin:[36,26,16,46]}}, //los valores que no cumplen con algun valor del arreglo 
+
+{"edad.anios":{$ne:33},edad:{$exists:1}}, //no igual, diferente de 
+
+
+*****and***
+ACEPTA UN ARREGLO DE CONDICIONES, DONDE CADA CONDICION VA ENCERRADO POR LLAVES.FUNCIONA IGUAL PARA EL OR
+
+{$and:[
+    {"edad.anios":{$ne:33}},
+    {edad:{$exists:1}}
+    ]}, 
+
+
+****se pueden anidar *********
+
+{$and:[
+    {$or:[{"edad.anios":28},{"edad.meses":6}]},
+    {$or:[{"sexo":"F"},{ciudad:{$ne:"QUERETARO"}}]}
+    ]}, 
+
+*******ordenar*****
+.sort({"edad.anios":1,nombre:1}) //acendente (1)
+
+.sort({"edad.anios":-1,nombre:1}) //descendente(-1)
+
+
+
+****limite y salida como array ****
+
+.limit(10).toArray() 
+
+****devuelve los elementos unicos, es decir, si se repite solo mostrara uno de ellos******** debemos filtrar dentro del distinct 
+
+db.alumnos.distinct("nombre").sort()
+
+
+db.alumnos.distinct("nombre",{sexo:"F"}).sort() // nombres diferentes de mujeres 
+
+db.alumnos.distinct("nombre",{$and:[{sexo:"F"},{ciudad:{$ne:"QUERETARO"}}]}).sort()
+
+
+{$and:[
+    {$or:[{ciudad:{$ne:"QUERETARO"}},{ciudad:{$ne:"SANTIAGO DE QUERETARO"}}]},
+    {"evaluaciones":{$exists:1}}
+    ]},

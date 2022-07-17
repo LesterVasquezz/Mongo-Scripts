@@ -1,0 +1,115 @@
+
+SI BUSCAMOS UN ELEMENTO DENTRO DE UN ARREGLO, LO BUSCARA POR TODO EL ARREGLO 
+
+MATERIAS=['MATE','ESP','FIS']
+ 
+db.alumnos.find({materias:"MATE"}).count()
+
+
+//BUSCA TODOS LOS ELEMENTOS ESPECIFICADOS EN EL ARREGLO DE $ALL 
+
+	db.alumnos.find({materias:{$all:["ETICA"]}}).count()
+	
+	
+//BUSCA SI ALGUNO LOS ELEMENTOS ESPECIFICADOS EN EL ARREGLO DE $ALL 
+
+	db.alumnos.find({materias:{$elemMatch:{$in:["ESPAÑOL","MATEMATICAS"]}}}).count()
+	
+//disctinct 
+//gte recibe cualquier cosa, un string, int 
+	db.alumnos.distinct("nombre",{nombre:{$gte:"M"}}).sort()
+	
+	
+//size, especifica el tamaño del arreglo (campo tipo array)
+
+db.alumnos.find(
+{
+    materias:{$size:4}
+    }
+)
+
+
+//expr, nos sirve para comparar campos del registro 
+
+db.alumnos.find(
+{
+    $expr:{$gt:["$edad.anios","$edad.dias"]}  //note que es lleva signo de peso antes del nombre del campo
+},
+{
+    nombre:1,edad:1,_id:0
+}
+
+
+
+//cond y divide 
+
+db.alumnos.find(
+{
+    $expr:{
+        $gt:[
+        {
+            $cond:{
+                    if:{$gte:["$edad.anios",30]},
+                    then: {$divide:["$edad.anios",2]},
+                    else:{$divide:["$edad.anios",3]}
+                }
+        },
+        10
+        ]//fin gt
+        
+        }//fin expr
+},
+{
+    nombre:1,edad:1,materias:1,_id:0
+}
+
+)
+
+
+
+
+
+//variables 
+let divide= {
+        $cond:{
+                    if:{$gte:["$edad.anios",30]},
+                    then: {$divide:["$edad.anios",2]},
+                    else:{$divide:["$edad.anios",3]}
+                }
+    }
+
+db.alumnos.find(
+{
+    $expr:{
+        $gt:[divide,10]//fin gt
+        }//fin expr
+},
+{
+    nombre:1,edad:1,materias:1,_id:0
+}
+
+).count()
+
+//where
+	
+db.alumnos.find(
+{$where: "this.nombre=='ALDO'"
+    },
+    {nombre:1, ap_paterno:1, email:1, _id:0}
+)
+
+
+//FUNCTION
+
+db.alumnos.find(
+{$where: function(){return isObject(this.materias)},
+    materias:"MATEMATICAS"
+    },
+    {nombre:1, ap_paterno:1, email:1,materias:1, _id:0}
+)
+
+
+
+
+
+

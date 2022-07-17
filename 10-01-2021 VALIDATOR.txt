@@ -1,0 +1,74 @@
+db.alumnos.remove({"curp":""}) //borra registros 
+
+db.ejemplo.drop() //borra tabla 
+
+insert many recibe un arreglo de valores
+
+
+db.alumnos.findOneAndReplace(
+{$and:[{sexo:"M"},{}]}
+)
+db.alumnos.findOneAndUpdate(
+{$and:[{sexo:"M"},{ciudad:{$exists:1}},{status_alu:{$exists:1}}]},
+{$set:{"ciudad":"MONTERREY","status_alu":"EX"}}
+)
+
+
+
+db.createCollection(
+    "contactos",{// nombre coleccion
+        validator:{
+        $jsonSchema:{
+            bsonType:"object",
+            required:["nombre","telefono"],
+            properties:{
+                telefono:{
+                    bsonType:"string",
+                    description:"ES NECESARIO INGRESAR UN TEL"
+                    },
+                email:{
+                    bsonType:"string",
+                    pattern:"@fers\.mx$",
+                    description:"email no cumple con patron"
+                    },
+                etiqueta:{
+                    enum:["alumno","profesor","directivo"], //valores aceptados
+                    description:"etiqueta acepta ciertos valores"
+                    },
+                anio_ingreso:{
+                    bsonType:"int",
+                    minimum:2000,
+                    maximum:2021
+                    },
+                 direccion:{
+                    bsonType:"object",
+                    required:["cp","ciudad"],
+                    properties:{
+                        calle:{bsonType:"string"},
+                        numero:{bsonType:"string"},
+                        colonia:{bsonType:"string"},
+                        ciudad:{bsonType:"string",description:"ciudad requerida"},
+                        cp:{bsonType:"int",description:"cp requerido"},
+                        }
+                    }   
+                }
+            }
+       }
+    }
+)
+db.contactos.find()
+db.contactos.insert({//invalido
+    nombre:"juan",
+    apellidos:"lopez"    
+    })
+    
+db.contactos.insert({//invalido
+    nombre:"juan",
+    telefono:11111    
+    })
+    
+db.contactos.insert({//valido
+    nombre:"juan",
+    telefono:"123456789"    
+    })
+

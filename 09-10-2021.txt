@@ -1,0 +1,77 @@
+Para agregar varios objetos en una coleccion los insertamos 
+con un arreglo
+
+db.materias.insert(
+[
+{
+        "materia" : "bdiii",
+        "carrera" : "ico",
+        "dia" : [
+                "lunes",
+                "miercoles",
+                "viernes"
+        ],
+        "alumnos" : 37,
+        "horas" : {
+                "practica" : 4,
+                "teoria" : "nada"
+        }
+},
+{
+        "materia" : "temas especiales de base de datos",
+        "carrera" : "ico",
+        "dia" : [
+                "martes",
+                "jueves"
+        ],
+        "alumnos" : 50,
+        "temas" : [
+                {
+                        "tema" : "BDD",
+                        "horas" : 3
+                },
+                {
+                        "tema" : "BDOB",
+                        "horas" : 4
+                },
+                {
+                        "tema" : "NoSql",
+                        "horas" : 3
+                }
+        ]
+}
+]
+)
+
+db.getCollectionInfos() //informacion de las colecciones, devuelve 
+				un arreglo					
+
+mongoimport --db test(la base) --collection alumnos(nombre coleccion) 
+--type csv --headerline (es para decir que en la primera linea tnemos el nombre de los campos)
+--drop --file C:\Users\PC\Documents\TEBD20221\alumnos.csv
+
+csv pone el campo que aparezca en el header line, aunque el renglon no tenga el dato.
+
+db.alumnos.find().limit(5).pretty() //limite a mostrar, el default de pretty es 20
+
+//paginar es cuando manda resultados parte por parte 
+
+podemos poner los campos de clave con la sentencia --field matricula,paterno,materno,nombre,sexo,curp,ciudad
+
+
+mongoimport --db test --collection alumnos2 --type csv --drop --file C:\Users\PC\Documents\TEBD20221\alumnos.csv --fields matricula,paterno,materno,nombre,sexo,curp,ciudad
+
+//filtro 
+db.alumnos2.find({matricula:"clave_alu"}).limit(2).pretty()
+
+
+//export
+mongoexport --db test --collection estudiantes
+ --type csv --out C:\Users\PC\Documents\TEBD20221\alumnos5.csv
+ --fields clave_alu,ap_paterno,ap_materno,nombre,sexo,curp,ciudad
+
+ mongoexport --db test --collection estudiantes
+ --type json --out C:\Users\PC\Documents\TEBD20221\alumnos6.json
+
+
+

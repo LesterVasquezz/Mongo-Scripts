@@ -1,0 +1,60 @@
+puerto 27017
+
+mongod - version //devuelve version de la base de datos
+mongo -version // devuelve version del shell
+mongo --dbpath=/ruta para base de datos
+mongostat //ver si esta corriendo el servicio 
+
+ddl // data definition language 
+
+db //vemos el objeto (base)
+
+use patito //nos cambia al objeto patiuto pero no lo crea persistente
+
+show dbs //muestra las bases que son persistentes 
+
+se pueden tener variables (Var)
+
+db.help() //ayuda con los metodos 
+las talbas son colecciones 
+
+db.getCollectionNames() //regresa arreglo
+show collections 
+show tables 
+
+//{} llaves porque es un objeto
+
+//funcion de insersion para insertar un elemento, hace que se cree la base de datos
+
+db.ejemplo.insert({materia:"temas especiales de base de datos",
+carrera:"ico", dia:['lunes','miercoles','viernes'],alumnos:37,
+ horas:{practica:4,teoria:"nada"}})
+
+db.ejemplo.count() //renglones
+db.getCollection(col).count()
+
+db.ejemplo.find() //equivalente a select 
+db.ejemplo.find().pretty()
+
+db.getCollection('ejemplo').find().pretty() //otra manera de ver
+					que contine la colecion
+
+
+//mongo cuida la integridad del elemento no de la colecion y agrega un id
+
+db.ejempla.insert(
+{
+        "_id" :1234,
+        "materia" : "temas especiales de base de datos",
+        "carrera" : "ico",
+        "dia" : [
+                "martes",
+                "jueves",
+        ],
+        "alumnos" : 37,
+	temas:[{tema:'BDD',horas:3},{tema:'BDOB',horas:4},{tema:'NoSql',horas:3}]
+        
+}
+)
+
+db.ejempla.drop()

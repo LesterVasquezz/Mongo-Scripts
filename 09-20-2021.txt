@@ -1,0 +1,86 @@
+db.direcciones.insertMany(
+[
+  {"_id":1, direccion:"Av Rancho seco SN", cp: "57200", "alumnos": [ "Juan", "Ana", "Pedro" ]},
+  {"_id":2, direccion:"Av Universidad 3000", cp: 30300},
+  {"_id":3, direccion:"Av Central 5000", cp: NumberLong(56234), "posgrado": true},
+  {"_id":4, direccion:"Las Palmas 4", cp: NumberInt(56330), "preferencias": {
+        "seguimientoEmails": false,
+        "idioma": "Español",
+        "zonaHoraria": 5
+    }},
+  {"_id":5, direccion:"Bosques de Africa 2", cp: ["57200", "57201"], "fecha" : ISODate("2020-01-08T08:52:30.038Z")},
+  {"_id":6, direccion:"Bosques de Africa 2", cp: {codigo:"57200", zp:"57201"}}
+]
+)
+
+
+db.direcciones.insert(
+  {"_id":7, 
+  direccion:"Bosques de Africa 2", cp: [
+   {codigo:"57200", zp:"57201"},
+   {codigo:"58200", zp:"58201"},
+   {codigo:"59200", zp:"59201"}
+   ]
+  }
+)
+
+db.direcciones.insert(
+  {"_id":8, 
+  direccion:"Bosques de Africa 2", cp: [
+   ["57200", 57201],
+   ["58200", 58201],
+   ["59200", 59201]
+   ]
+  }
+)
+
+db.direcciones.insert(
+{"_id":9, direccion:"Av Universidad 3000", cp: "30300", fecha:"2020-01-08 08:52:30"}
+)
+
+
+//buscar por tipo de dato 
+db.direcciones.find({cp:{$type:"string"}})
+db.direcciones.find({cp:{$type:1}})
+
+
+https://docs.mongodb.com/manual/reference/operator/query/type/
+
+//types: 
+1 double
+2 string
+3 object 
+4 array
+7 objectId
+
+mongoimport --db collegio --collection alumnos --file C:\Users\PC\Documents\TEBD20221\desc\alumnos_completo.json --drop
+
+//si un campo existe
+db.alumnos.find({curp:{$exists:true}}).count()
+
+proyeccion: los campos que voy a mostrar (sekeccinar campos especificos) 
+
+db.alumnos.find({},{clave_alu:1, nombre:1,sexo:1,email:1}).pretty()
+//
+
+//filtro mas proyeccion
+
+db.alumnos.find({email:{$exists:1}},{clave_alu:1, nombre:1,sexo:1,email:1}).pretty()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

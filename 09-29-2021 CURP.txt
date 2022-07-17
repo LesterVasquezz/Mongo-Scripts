@@ -1,0 +1,129 @@
+db.alumnos.find(
+{curp:/[A-Z][A,E,I,O,U,X][A-Z]{2}[0-9]{2}[0-1][0-9][0-3][0-9][M,H][A-Z]{2}[B,C,D,F,G,H,J,K,L,M,N,Ñ,P,Q,R,S,T,V,W,X,Y,Z]{3}[0-9,A-Z][0-9]/
+},
+{nombre:1,curp:1,_id:0}
+)
+
+db.alumnos.find(
+{email:/[[:punct:]]/}, //puntos especiales (comas, diagonales, arroba, punto y coma etc)
+{nombre:1,curp:1,email:1,_id:0}
+)
+
+
+//inicia con un digito 
+db.alumnos.find(
+{email:/^[[:digit:]]/}, // digitos  
+{nombre:1,curp:1,email:1,_id:0}
+)
+
+// \d es igual que [:digit:]
+db.alumnos.find(
+{email:/\d/}, // digitos  
+{nombre:1,curp:1,email:1,_id:0}
+)
+
+
+//contiene 3 digitos seguidos 
+db.alumnos.find(
+{email:/[[:digit:]]{3}/}, // digitos  
+{nombre:1,curp:1,email:1,_id:0}
+)
+
+//contiene almenos 4 y maximo 6 digitos seguidos 
+db.alumnos.find(
+{email:/[[:digit:]]{4,6}/}, // digitos  
+{nombre:1,curp:1,email:1,_id:0}
+)
+
+// \D que contenga alguna cadena 
+db.alumnos.find(
+{email:/\D/}, // digitos  
+{nombre:1,curp:1,email:1,_id:0}
+).count()
+
+
+
+/////Updatesss 
+
+db.alumnos.updateOne(
+{clave_alu:11060062},
+{$set:{materias:["BDI", "BDII", "TEBD"]}}
+)
+
+db.alumnos.updateOne(
+{clave_alu:11060062},
+
+{$set:{
+    semestres:["20211", "20222"],
+    promedio:10,
+    proyectos:[{proyecto:"P1",duracion:3, tiempo:"meses"},{proyecto:"PDos",duracion:4, tiempo:"semanas"}],
+    domicilio:{calle:"Rancho seco", numero:"S/N", cp:"50000"},
+    fnac:ISODate("2000-09-29")
+    
+    }//fin set
+    
+    }
+)
+
+db.alumnos.find({nombre:"ALDO"}
+)
+
+db.alumnos.updateOne(
+{nombre:"ALDO"},
+
+{$set:{
+    semestres:["20211", "20222"],
+    promedio:10,
+    proyectos:[{proyecto:"P1",duracion:3, tiempo:"meses"},{proyecto:"PDos",duracion:4, tiempo:"semanas"}],
+    domicilio:{calle:"Rancho seco", numero:"S/N", cp:"50000"},
+    fnac:ISODate("2000-09-29")
+    
+    }//fin set
+    
+    }
+)
+    
+db.alumnos.updateMany(
+{},
+{
+    $set:{
+    status_alu:"AC",
+    "colegio.nombre":"Instituto Neza",
+    "colegio.nivel":"Secundaria",
+    fingreso:Date()
+    }
+    }
+)
+db.alumnos.find({status_alu:{$exists:1}}).count()
+
+db.alumnos.updateMany(
+{nombre:/(maria|juan)/i},
+{
+    $set:{
+        visita:true
+    }
+    }
+)
+    
+db.alumnos.updateMany(
+{nombre:/(maria|juan)/i},
+{
+    $unset:{
+        fingreso:false
+    }
+    }
+)
+    //para poner los dos juntos (set y unset) se usan corchetes [{$set},{$unset}] 
+db.alumnos.updateMany(
+    {nombre:/(juan|maria)/i} ,
+    [
+    {
+        $set:{ actualizado: "$$NOW" ,
+            grupo:{$concat:["$colegio.nivel","-","$nombre"]}}
+    },
+    { $unset: [ "status_alu"] }
+    ]
+)
+
+    
+db.alumnos.find({nombre:/(juan|maria)/i})
